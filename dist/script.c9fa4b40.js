@@ -225,11 +225,10 @@ var Player = function () {
 }();
 
 var Coin = function () {
-  function Coin(pos) {
+  function Coin(game) {
     _classCallCheck(this, Coin);
 
-    this.x = pos.x;
-    this.y = pos.y;
+    this.game = game;
     this.size = {
       x: 25,
       y: 25

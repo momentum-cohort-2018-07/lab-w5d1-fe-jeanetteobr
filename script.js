@@ -85,9 +85,8 @@ class Player {
 }
 
 class Coin {
-  constructor (pos) {
-    this.x = pos.x
-    this.y = pos.y
+  constructor (game) {
+    this.game = game
     this.size = {
       x: 25,
       y: 25
