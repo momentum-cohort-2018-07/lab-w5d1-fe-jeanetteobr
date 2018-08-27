@@ -1,0 +1,12 @@
+.container {
+    margin: auto;
+    width: 50%;
+    padding-top: 50px;
+}
+
+h1{
+    font-family: "Playfair Display", serif;
+    text-align: center;
+    font-weight: 700;
+    color: #857E7B;
+}
