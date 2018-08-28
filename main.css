@@ -1,12 +1,23 @@
-.container {
-    margin: auto;
-    width: 50%;
-    padding-top: 50px;
+* {
+    box-sizing: border-box;
 }
 
-h1{
+h1 {
     font-family: "Playfair Display", serif;
     text-align: center;
     font-weight: 700;
     color: #857E7B;
 }
+
+html {
+    background-color: #EAF2E3;
+}
+
+.container {
+    display: flex; 
+    margin: auto;
+    max-width: 500px;
+    flex-flow: column;
+    padding-top: 50px;
+}
+
