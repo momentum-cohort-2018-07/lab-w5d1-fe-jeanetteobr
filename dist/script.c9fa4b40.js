@@ -124,6 +124,7 @@ var gameSize = { x: canvas.width, y: canvas.height
   screen: '#DB7F67',
   coin: '#D6BA73',
   wall: '#59344F'
+
   // notes the size of the player's bounding box
 };var wallMin = 152;
 var wallMax = 318;
@@ -136,6 +137,7 @@ var Game = function () {
 
     this.player = new Player();
     this.coin = new Coin();
+    this.obstacles = [];
     this.tick();
   }
   // animates the game
@@ -161,14 +163,69 @@ var Game = function () {
       this.Wall();
       this.player.draw();
       this.coin.draw();
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = this.obstacles[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var obstacle = _step.value;
+
+          obstacle.draw();
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
     }
     // updates the game state
 
   }, {
     key: 'update',
     value: function update() {
+      this.obstacles = this.obstacles.filter(function (obstacle) {
+        return obstacle.center.x >= 0 && obstacle.center.x <= gameSize.x && obstacle.center.y >= 0 && obstacle.center.y <= gameSize.y;
+      });
+      while (this.obstacles.length < 2) {
+        this.obstacles.push(new Obstacle());
+      }
       this.coin.update();
       this.player.update();
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
+
+      try {
+        for (var _iterator2 = this.obstacles[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var obstacle = _step2.value;
+
+          obstacle.update();
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2.return) {
+            _iterator2.return();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
+          }
+        }
+      }
+
       if (collide(this.coin, this.player)) {
         console.log('hit');
         this.coin.center.x = Math.floor(Math.random() * 166) + wallMin;
@@ -183,6 +240,33 @@ var Game = function () {
       screen.fillStyle = colors.screen;
       screen.fillRect(0, 0, gameSize.x, gameSize.y);
       screen.strokeRect(150, 150, 200, 200);
+    }
+  }, {
+    key: 'moveObstacles',
+    value: function moveObstacles() {
+      var entrySide = [Math.floor(Math.random() * 3) + 1];
+      var x = void 0,
+          y = void 0,
+          vx = void 0,
+          vy = void 0;
+
+      if (entrySide === 1) {
+        x = Math.floor(Math.random() * 166) + wallMin;
+        y = Math.floor(Math.random() * 166) + wallMin;
+        // vx =
+      } else if (entrySide === 2) {
+        x = -10;
+        y = Math.random() * this.size.height;
+        // vy =
+      } else if (entrySide === 3) {
+        x = Math.floor(Math.random() * 166) + wallMin;
+        y = Math.floor(Math.random() * 166) + wallMin;
+        // vx =
+      } else if (entrySide === 4) {
+        x = Math.floor(Math.random() * 166) + wallMin;
+        y = Math.floor(Math.random() * 166) + wallMin;
+        // vy =
+      }
     }
   }]);
 
@@ -279,6 +363,37 @@ var Coin = function () {
 
 // creates the obstacle sprites and dictates how they act
 
+
+var Obstacle = function () {
+  function Obstacle(game) {
+    _classCallCheck(this, Obstacle);
+
+    this.size = {
+      x: 30,
+      y: 30
+      // randomly places obstacle on screen
+    };this.center = {
+      x: 0,
+      y: Math.floor(Math.random() * 166) + wallMin
+    };
+  }
+
+  _createClass(Obstacle, [{
+    key: 'draw',
+    value: function draw() {
+      screen.fillStyle = colors.obstacles;
+      screen.fillRect(this.center.x, this.center.y, this.size.x, this.size.x);
+    }
+  }, {
+    key: 'update',
+    value: function update() {
+      this.center.x += 2;
+    }
+  }]);
+
+  return Obstacle;
+}();
+
 // collision detection function
 
 
@@ -339,6 +454,10 @@ Keyboarder.KEYS = {
 
   // starts game
 };new Game();
+
+// ** TODO
+// create an obstacle class
+// create a score that updates when player collects coin and when player collides with obstacle
 },{}],"../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';

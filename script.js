@@ -17,6 +17,7 @@ const colors = {
   wall: '#59344F'
 
 }
+
 // notes the size of the player's bounding box
 const wallMin = 152
 const wallMax = 318
@@ -26,6 +27,7 @@ class Game {
   constructor () {
     this.player = new Player()
     this.coin = new Coin()
+    this.obstacles = []
     this.tick()
   }
   // animates the game
@@ -40,11 +42,24 @@ class Game {
     this.Wall()
     this.player.draw()
     this.coin.draw()
+    for (let obstacle of this.obstacles) {
+      obstacle.draw()
+    }
   }
   // updates the game state
   update () {
+    this.obstacles = this.obstacles.filter(function (obstacle) {
+      return obstacle.center.x >= 0 && obstacle.center.x <= gameSize.x &&
+      obstacle.center.y >= 0 && obstacle.center.y <= gameSize.y
+    })
+    while (this.obstacles.length < 2) {
+      this.obstacles.push(new Obstacle())
+    }
     this.coin.update()
     this.player.update()
+    for (let obstacle of this.obstacles) {
+      obstacle.update()
+    }
     if (collide(this.coin, this.player)) {
       console.log('hit')
       this.coin.center.x = Math.floor(Math.random() * 166) + wallMin
@@ -56,6 +71,28 @@ class Game {
     screen.fillStyle = colors.screen
     screen.fillRect(0, 0, gameSize.x, gameSize.y)
     screen.strokeRect(150, 150, 200, 200)
+  }
+  moveObstacles () {
+    let entrySide = [Math.floor(Math.random() * 3) + 1]
+    let x, y, vx, vy
+
+    if (entrySide === 1) {
+      x = Math.floor(Math.random() * 166) + wallMin
+      y = Math.floor(Math.random() * 166) + wallMin
+      // vx =
+    } else if (entrySide === 2) {
+      x = -10
+      y = Math.random() * this.size.height
+      // vy =
+    } else if (entrySide === 3) {
+      x = Math.floor(Math.random() * 166) + wallMin
+      y = Math.floor(Math.random() * 166) + wallMin
+      // vx =
+    } else if (entrySide === 4) {
+      x = Math.floor(Math.random() * 166) + wallMin
+      y = Math.floor(Math.random() * 166) + wallMin
+      // vy =
+    }
   }
 }
 
@@ -123,6 +160,26 @@ class Coin {
 }
 
 // creates the obstacle sprites and dictates how they act
+class Obstacle {
+  constructor (game) {
+    this.size = {
+      x: 30,
+      y: 30
+    }
+    // randomly places obstacle on screen
+    this.center = {
+      x: 0,
+      y: Math.floor(Math.random() * 166) + wallMin
+    }
+  }
+  draw () {
+    screen.fillStyle = colors.obstacles
+    screen.fillRect(this.center.x, this.center.y, this.size.x, this.size.x)
+  }
+  update () {
+    this.center.x += 2
+  }
+}
 
 // collision detection function
 let collide = function (sprite1, sprite2) {
@@ -178,3 +235,7 @@ Keyboarder.KEYS = {
 
 // starts game
 new Game()
+
+// ** TODO
+// create an obstacle class
+// create a score that updates when player collects coin and when player collides with obstacle
