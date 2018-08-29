@@ -52,8 +52,8 @@ class Game {
       return obstacle.center.x >= 0 && obstacle.center.x <= gameSize.x &&
       obstacle.center.y >= 0 && obstacle.center.y <= gameSize.y
     })
-    while (this.obstacles.length < 2) {
-      this.obstacles.push(new Obstacle())
+    while (this.obstacles.length < 3) {
+      this.moveObstacles()
     }
     this.coin.update()
     this.player.update()
@@ -73,26 +73,32 @@ class Game {
     screen.strokeRect(150, 150, 200, 200)
   }
   moveObstacles () {
-    let entrySide = [Math.floor(Math.random() * 3) + 1]
+    let entrySide = Math.floor(Math.random() * 4) + 1
     let x, y, vx, vy
 
     if (entrySide === 1) {
-      x = Math.floor(Math.random() * 166) + wallMin
-      y = Math.floor(Math.random() * 166) + wallMin
-      // vx =
+      x = Math.floor(Math.random() * 4) * 60 + 210
+      y = 0
+      vx = 0
+      vy = 2
     } else if (entrySide === 2) {
-      x = -10
-      y = Math.random() * this.size.height
-      // vy =
+      x = 0
+      y = Math.floor(Math.random() * 4) * 60 + 210
+      vx = 2
+      vy = 0
     } else if (entrySide === 3) {
-      x = Math.floor(Math.random() * 166) + wallMin
-      y = Math.floor(Math.random() * 166) + wallMin
-      // vx =
+      x = 500
+      y = Math.floor(Math.random() * 4) * 60 + 210
+      vx = -2
+      vy = 0
     } else if (entrySide === 4) {
-      x = Math.floor(Math.random() * 166) + wallMin
-      y = Math.floor(Math.random() * 166) + wallMin
-      // vy =
+      x = Math.floor(Math.random() * 4) * 60 + 210
+      y = 500
+      vx = 0
+      vy = -2
     }
+    console.log(x, y, vx, vy)
+    this.obstacles.push(new Obstacle(this, {x: x, y: y}, {x: vx, y: vy}))
   }
 }
 
@@ -161,23 +167,21 @@ class Coin {
 
 // creates the obstacle sprites and dictates how they act
 class Obstacle {
-  constructor (game) {
-    this.size = {
-      x: 30,
-      y: 30
-    }
-    // randomly places obstacle on screen
-    this.center = {
-      x: 0,
-      y: Math.floor(Math.random() * 166) + wallMin
-    }
+  constructor (game, pos, vel) {
+    this.game = game
+    this.velocity = vel
+    this.length = 166
+    this.center = pos
+    console.log(this)
   }
   draw () {
     screen.fillStyle = colors.obstacles
-    screen.fillRect(this.center.x, this.center.y, this.size.x, this.size.x)
+    screen.fillRect(this.center.x, this.center.y, 30, 30)
   }
   update () {
-    this.center.x += 2
+    this.center.x += this.velocity.x
+    this.center.y += this.velocity.y
+    // console.log(this.center)
   }
 }
 

@@ -196,8 +196,8 @@ var Game = function () {
       this.obstacles = this.obstacles.filter(function (obstacle) {
         return obstacle.center.x >= 0 && obstacle.center.x <= gameSize.x && obstacle.center.y >= 0 && obstacle.center.y <= gameSize.y;
       });
-      while (this.obstacles.length < 2) {
-        this.obstacles.push(new Obstacle());
+      while (this.obstacles.length < 3) {
+        this.moveObstacles();
       }
       this.coin.update();
       this.player.update();
@@ -244,29 +244,35 @@ var Game = function () {
   }, {
     key: 'moveObstacles',
     value: function moveObstacles() {
-      var entrySide = [Math.floor(Math.random() * 3) + 1];
+      var entrySide = Math.floor(Math.random() * 4) + 1;
       var x = void 0,
           y = void 0,
           vx = void 0,
           vy = void 0;
 
       if (entrySide === 1) {
-        x = Math.floor(Math.random() * 166) + wallMin;
-        y = Math.floor(Math.random() * 166) + wallMin;
-        // vx =
+        x = Math.floor(Math.random() * 4) * 60 + 210;
+        y = 0;
+        vx = 0;
+        vy = 2;
       } else if (entrySide === 2) {
-        x = -10;
-        y = Math.random() * this.size.height;
-        // vy =
+        x = 0;
+        y = Math.floor(Math.random() * 4) * 60 + 210;
+        vx = 2;
+        vy = 0;
       } else if (entrySide === 3) {
-        x = Math.floor(Math.random() * 166) + wallMin;
-        y = Math.floor(Math.random() * 166) + wallMin;
-        // vx =
+        x = 500;
+        y = Math.floor(Math.random() * 4) * 60 + 210;
+        vx = -2;
+        vy = 0;
       } else if (entrySide === 4) {
-        x = Math.floor(Math.random() * 166) + wallMin;
-        y = Math.floor(Math.random() * 166) + wallMin;
-        // vy =
+        x = Math.floor(Math.random() * 4) * 60 + 210;
+        y = 500;
+        vx = 0;
+        vy = -2;
       }
+      console.log(x, y, vx, vy);
+      this.obstacles.push(new Obstacle(this, { x: x, y: y }, { x: vx, y: vy }));
     }
   }]);
 
@@ -365,29 +371,28 @@ var Coin = function () {
 
 
 var Obstacle = function () {
-  function Obstacle(game) {
+  function Obstacle(game, pos, vel) {
     _classCallCheck(this, Obstacle);
 
-    this.size = {
-      x: 30,
-      y: 30
-      // randomly places obstacle on screen
-    };this.center = {
-      x: 0,
-      y: Math.floor(Math.random() * 166) + wallMin
-    };
+    this.game = game;
+    this.velocity = vel;
+    this.length = 166;
+    this.center = pos;
+    console.log(this);
   }
 
   _createClass(Obstacle, [{
     key: 'draw',
     value: function draw() {
       screen.fillStyle = colors.obstacles;
-      screen.fillRect(this.center.x, this.center.y, this.size.x, this.size.x);
+      screen.fillRect(this.center.x, this.center.y, 30, 30);
     }
   }, {
     key: 'update',
     value: function update() {
-      this.center.x += 2;
+      this.center.x += this.velocity.x;
+      this.center.y += this.velocity.y;
+      // console.log(this.center)
     }
   }]);
 
@@ -487,7 +492,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '55135' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '61475' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
